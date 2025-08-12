@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Gita Mood Selector</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+        transition: background-color 0.6s ease;
+    }
+    h1 {
+        margin-top: 20px;
+        font-size: 1.8rem;
+    }
+    .moods {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 20px;
+    }
+    .mood-btn {
+        padding: 15px 25px;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .mood-btn:hover {
+        transform: scale(1.05);
+    }
+    .shloka-box {
+        margin-top: 30px;
+        padding: 15px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 10px;
+        display: inline-block;
+        max-width: 90%;
+    }
+    .sanskrit {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    .translation {
+        font-size: 1rem;
+        margin-top: 8px;
+    }
+    .shuffle-btn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: none;
+    }
+    .dice {
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+    @keyframes rollDice {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(90deg); }
+        50% { transform: rotate(180deg); }
+        75% { transform: rotate(270deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<h1>Bhagavad Gita Mood Selector</h1>
+<h2> Pick your Mood</h2>
+<div class="moods">
+    <button class="mood-btn" style="background:#FFD700" onclick="selectMood('happy')">😊 Happy</button>
+    <button class="mood-btn" style="background:#87CEFA" onclick="selectMood('sad')">😔 Sad</button>
+    <button class="mood-btn" style="background:#FF4500" onclick="selectMood('angry')">😡 Angry</button>
+    <button class="mood-btn" style="background:#90EE90" onclick="selectMood('peaceful')">🕊️ Peaceful</button>
+</div>
+
+<div id="shloka" class="shloka-box" style="display:none;">
+    <div class="sanskrit" id="sanskrit"></div>
+    <div class="translation" id="translation"></div>
+</div>
+
+<button id="shuffle" class="shuffle-btn" onclick="shuffleShloka()">
+    <span class="dice">🎲</span> Shuffle
+</button>
+
+<div id="shloka" class="shloka-box" style="display:none;">
+  <img id="godImage" src="" alt="Gita Illustration" style="max-width:200px; margin: 0 auto 15px; display: block;">
+  <div class="sanskrit" id="sanskrit"></div>
+  <div class="translation" id="translation"></div>
+</div>
+
+
+<script>
+const shlokas = {
+  happy: {
+    color: "#FFD700",
+    image: "images/krishna.svg",
+    list: [
+      { sanskrit: "अहं आत्मगुडाकेश सर्वभूताशयस्थितः।", translation: "I am the Self seated in the hearts of all beings. (BG 10.20)" },
+      { sanskrit: "यो माम् पश्यति सर्वत्र सर्वं च मयि पश्यति।", translation: "One who sees Me everywhere and sees everything in Me is never lost to Me. (BG 6.30)" },
+      { sanskrit: "सर्वभूतहिते रतः।", translation: "Delighting in the welfare of all beings. (BG 12.4)" }
+    ]
+  },
+  sad: {
+    color: "#87CEFA",
+    image: "images/ganesha.svg",
+    list: [
+      { sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।", translation: "You have a right to perform your prescribed duties, but not to the fruits of your actions. (BG 2.47)" },
+      { sanskrit: "न त्वेवाहं जातु नासं न त्वं नेमे जनाधिपाः।", translation: "Never was there a time when I did not exist, nor you. (BG 2.12)" },
+      { sanskrit: "मात्रास्पर्शास्तु कौन्तेय शीतोष्णसुखदुःखदाः।", translation: "Happiness and distress are temporary, endure them. (BG 2.14)" }
+    ]
+  },
+  angry: {
+    color: "#FF4500",
+    image: "images/shiva.svg",
+    list: [
+      { sanskrit: "आपूर्यमाणमचलप्रतिष्ठं।", translation: "One who remains undisturbed, even amidst difficulties, is truly wise. (BG 2.70)" },
+      { sanskrit: "क्रोधाद्भवति संमोहः।", translation: "From anger, delusion arises; from delusion, bewilderment of memory. (BG 2.63)" },
+      { sanskrit: "शमः शान्तिरुपारतिः।", translation: "Calmness, tranquility, and restraint lead to peace. (BG 16.1)" }
+    ]
+  },
+  peaceful: {
+    color: "#90EE90",
+    image: "images/peace.svg",
+    list: [
+      { sanskrit: "शान्तिम् आप्नोति नैष्ठिकीम्।", translation: "Such a person attains supreme peace. (BG 2.71)" },
+      { sanskrit: "ब्रह्मभूतः प्रसन्नात्मा।", translation: "Being situated in Brahman, one is joyfully situated. (BG 18.54)" },
+      { sanskrit: "यो मां पश्यति सर्वत्र।", translation: "He who sees Me everywhere, for him I am never lost. (BG 6.30)" }
+    ]
+  }
+};
+
+
+let currentMood = null;
+
+function selectMood(mood) {
+    currentMood = mood;
+    document.body.style.backgroundColor = shlokas[mood].color;
+    showRandomShloka();
+    document.getElementById('shuffle').style.display = 'inline-block';
+}
+
+function showRandomShloka() {
+    if (!currentMood) return;
+    const list = shlokas[currentMood].list;
+    const randomIndex = Math.floor(Math.random() * list.length);
+    const chosen = list[randomIndex];
+    document.getElementById('sanskrit').textContent = chosen.sanskrit;
+    document.getElementById('translation').textContent = chosen.translation;
+    document.getElementById('shloka').style.display = 'block';
+}
+
+function shuffleShloka() {
+    const dice = document.querySelector('.dice');
+    dice.style.animation = "rollDice 0.6s linear";
+    setTimeout(() => {
+        dice.style.animation = ""; // reset animation
+        showRandomShloka();
+    }, 600);
+}
+</script>
+
+</body>
+</html>
