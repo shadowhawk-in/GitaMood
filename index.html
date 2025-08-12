@@ -88,19 +88,16 @@
 </div>
 
 <div id="shloka" class="shloka-box" style="display:none;">
-    <div class="sanskrit" id="sanskrit"></div>
-    <div class="translation" id="translation"></div>
+  <img id="godImage" src="" alt="Gita Illustration" style="max-width:200px; margin: 0 auto 15px; display: block;">
+  <div class="sanskrit" id="sanskrit"></div>
+  <div class="translation" id="translation"></div>
 </div>
 
 <button id="shuffle" class="shuffle-btn" onclick="shuffleShloka()">
     <span class="dice">🎲</span> Shuffle
 </button>
 
-<div id="shloka" class="shloka-box" style="display:none;">
-  <img id="godImage" src="" alt="Gita Illustration" style="max-width:200px; margin: 0 auto 15px; display: block;">
-  <div class="sanskrit" id="sanskrit"></div>
-  <div class="translation" id="translation"></div>
-</div>
+
 
 
 <script>
@@ -155,13 +152,20 @@ function selectMood(mood) {
 
 function showRandomShloka() {
     if (!currentMood) return;
-    const list = shlokas[currentMood].list;
+    const moodData = shlokas[currentMood];
+    const list = moodData.list;
     const randomIndex = Math.floor(Math.random() * list.length);
     const chosen = list[randomIndex];
+
     document.getElementById('sanskrit').textContent = chosen.sanskrit;
     document.getElementById('translation').textContent = chosen.translation;
+
+    // Set the image source:
+    document.getElementById('godImage').src = moodData.image;
+
     document.getElementById('shloka').style.display = 'block';
 }
+
 
 function shuffleShloka() {
     const dice = document.querySelector('.dice');
